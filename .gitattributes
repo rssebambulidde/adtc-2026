@@ -1,0 +1,4 @@
+# The evaluator runs download_model.sh under bash on Ubuntu. CRLF line endings
+# would break the shebang, so force LF regardless of the authoring platform.
+*.sh text eol=lf
+*.jsonl text eol=lf

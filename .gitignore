@@ -1,0 +1,41 @@
+# Model weights are never committed. The evaluator fetches them via download_model.sh.
+model/*
+!model/.gitkeep
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# Profiler output
+submission.json
+audit.json
+verdict.json
+artifacts/
+
+# Training intermediates
+checkpoints/
+outputs/
+merged/
+wandb/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.uv-cache/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# Datasets: keep curated seed + build recipe, ignore bulk downloads and caches
+data/raw/
+data/cache/
+data/build/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

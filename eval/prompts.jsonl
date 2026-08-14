@@ -1,0 +1,15 @@
+{"id":"ev_001","crop":"maize","prompt":"After a week of rain in eastern Uganda my maize has yellow lower leaves and thin stalks. I already top-dressed once. What else should I check before buying more fertiliser?"}
+{"id":"ev_002","crop":"cassava","prompt":"I bought cheap cassava cuttings from a roadside seller. Half the plants show mosaic mottling at 2 months. What should I do with this field and how do I avoid repeating the mistake?"}
+{"id":"ev_003","crop":"beans","prompt":"Stored beans in ordinary poly bags started heating and smell musty after six weeks. Can I save any of the lot for food, and how do I store the rest of my harvest?"}
+{"id":"ev_004","crop":"coffee","prompt":"My cooperative deducted for poor cherry quality. I had mixed green and red cherries in the same sack. Explain a better picking and delivery routine for a 500-tree shamba."}
+{"id":"ev_005","crop":"banana","prompt":"A neighbour’s banana wilt reached the boundary of my garden. List the first five actions I should take this week to protect my mats."}
+{"id":"ev_006","crop":"maize","prompt":"I can only afford either certified hybrid seed OR a full fertiliser package for one acre, not both. Which should I prioritise in a drought-prone Kenyan county and why?"}
+{"id":"ev_007","crop":"general","prompt":"Explain in simple terms how to read a pesticide label before spraying beans, including pre-harvest interval and why it matters for market sales."}
+{"id":"ev_008","crop":"cassava","prompt":"I want to make cassava chips for sale. Walk me through harvest-to-dry steps that reduce mould without a mechanical dryer."}
+{"id":"ev_009","crop":"coffee","prompt":"Leaf rust is severe after prolonged rains in Kiambu. Beyond spraying, what cultural practices should I schedule in the next month?"}
+{"id":"ev_010","crop":"maize","prompt":"Fall armyworm returned two weeks after I sprayed. Give an IPM plan for the next 21 days that does not rely on daily spraying."}
+{"id":"ev_011","crop":"beans","prompt":"Climbing beans on a 0.25 acre plot: how many stakes roughly, and when should I put them in relative to germination?"}
+{"id":"ev_012","crop":"banana","prompt":"I have limited manure. How should I allocate it across 40 banana mats of mixed vigour before the dry season?"}
+{"id":"ev_013","crop":"maize","prompt":"Describe how to tell aflatoxin-risk maize at harvest without a lab kit, and what to do with suspicious cobs."}
+{"id":"ev_014","crop":"general","prompt":"Rains are late. Should I plant my full maize acreage on the first storm, or stage plantings? Give a practical decision rule for a 2-acre farm."}
+{"id":"ev_015","crop":"coffee","prompt":"I am considering stumping half my old robusta. What cash-flow and agronomy risks should I plan for in the first year after stumping?"}
