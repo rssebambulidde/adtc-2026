@@ -13,6 +13,9 @@ audit.json
 verdict.json
 artifacts/
 
+# Local llama.cpp binaries (downloaded, not source)
+tools/
+
 # Training intermediates
 checkpoints/
 outputs/

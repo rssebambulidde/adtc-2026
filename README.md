@@ -94,6 +94,18 @@ Produces `model/adtc-kilimo-1.5b-q4_k_m.gguf` (must match `_runtime.model_path` 
 
 ### 4. Benchmark locally
 
+The profiler needs `llama-bench` on PATH. On Windows, grab the prebuilt CPU build
+(`llama-*-bin-win-cpu-x64.zip` from [llama.cpp releases](https://github.com/ggml-org/llama.cpp/releases))
+and unzip it to `tools/llama/`, then:
+
+```powershell
+bash download_model.sh
+pwsh scripts/run_profiler.ps1
+```
+
+`run_profiler.ps1` puts `tools/llama` on PATH, runs the profiler in participant
+mode, and prints the normalized scores. On Linux/macOS:
+
 ```bash
 bash download_model.sh
 adtc-profiler run --submission . --mode participant --output submission.json
@@ -101,6 +113,9 @@ python scripts/score.py submission.json
 ```
 
 Paste S_perf / S_eff into `REPORT.md` and the Devpost form.
+
+Note: `llama-bench` is pinned to `-ngl 0` by the profiler, so numbers are CPU-only
+by design and should reconcile with the audit VM.
 
 ### 5. Publish & submit
 
