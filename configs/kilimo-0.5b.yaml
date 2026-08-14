@@ -1,7 +1,7 @@
-# Kilimo LoRA SFT — run on a Linux GPU host (Udutech / Colab), not local Windows CPU.
+# Kilimo LoRA SFT ??? run on a Linux GPU host (Udutech / Colab), not local Windows CPU.
 
 model:
-  base: Qwen/Qwen2.5-1.5B-Instruct
+  base: Qwen/Qwen2.5-0.5B-Instruct
   torch_dtype: bfloat16
   trust_remote_code: true
 
@@ -25,7 +25,7 @@ lora:
     - down_proj
 
 training:
-  output_dir: checkpoints/kilimo-1.5b-lora
+  output_dir: checkpoints/kilimo-0.5b-lora
   num_train_epochs: 3
   per_device_train_batch_size: 4
   gradient_accumulation_steps: 4
@@ -40,4 +40,4 @@ training:
   seed: 42
 
 merge:
-  merged_dir: merged/kilimo-1.5b
+  merged_dir: merged/kilimo-0.5b

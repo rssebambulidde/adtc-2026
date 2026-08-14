@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.1.0",
+  "profiler_version": "adtc-profiler 0.1.0",
+  "submission": {
+    "team_id": "rssebambulidde-kilimo",
+    "domain": "agriculture",
+    "language_scope": [
+      "en",
+      "sw"
+    ],
+    "african_alpha_claim": true,
+    "budget_laptop_claim": true,
+    "submitter": {
+      "name": "Robert Ssebambulidde",
+      "email": "rssebambulidde@gmail.com",
+      "github_handle": "rssebambulidde"
+    },
+    "cross_disciplinary_pairing": {
+      "discipline": "agronomy",
+      "load_bearing": true,
+      "description": "Extension advisory for East African smallholder farmers. The model is tuned on agronomic practice for maize, cassava, beans, coffee and banana under smallholder rainfed conditions, covering pest and disease triage, input timing, and post-harvest handling. Agronomy is load-bearing: the training corpus is drawn from extension curricula and pest fact sheets, and the evaluation prompts mirror the questions extension officers field in person."
+    },
+    "test_prompts": [
+      {
+        "prompt_id": "tp_001",
+        "prompt": "My maize is at knee height and the young leaves have ragged holes with wet sawdust-like droppings in the funnel. About a third of the plants look affected. I farm one acre in central Uganda and the rains started three weeks ago. What is attacking my crop, and what should I do this week if I can only afford one intervention?"
+      },
+      {
+        "prompt_id": "tp_002",
+        "prompt": "I harvested 900 kg of beans and want to store them until prices rise in three months, but last season I lost a lot to weevils and some bags went mouldy. I have no electricity and store in a mud-brick room. Explain, step by step, how to dry and store the beans safely, including how I can tell they are dry enough without a moisture meter."
+      }
+    ],
+    "model": {
+      "name": "ADTC-Kilimo-1.5B-Q4_K_M",
+      "runtime": "llama.cpp",
+      "quantization": "GGUF Q4_K_M",
+      "parameters_estimate": "0.5B",
+      "packaging": "binary_bundle"
+    }
+  },
+  "environment": {
+    "measured_on": "participant_laptop",
+    "cpu_model": "Intel64 Family 6 Model 142 Stepping 12, GenuineIntel",
+    "ram_gb": 15.8,
+    "gpu": "none",
+    "os": "Windows-11-10.0.26200-SP0"
+  },
+  "throughput": {
+    "tokens_per_second_generation": 14.4,
+    "first_token_latency_ms": 13646.36,
+    "prompt_tokens": 512,
+    "generated_tokens": 128
+  },
+  "memory": {
+    "peak_rss_mb": 543.09,
+    "steady_state_rss_mb": 506.99,
+    "peak_vms_mb": 461.53
+  },
+  "accuracy": [],
+  "cpu_thermal": {
+    "cpu_percent_p99": 100.0,
+    "core_temp_c_peak": null,
+    "throttled": false
+  },
+  "reproducibility": {
+    "git_commit_sha": "e5bcd10cc028",
+    "docker_image_digest": "unknown",
+    "random_seed": 42
+  },
+  "model_info": {
+    "params_count": 494032768,
+    "context_length": 32768,
+    "architecture": "qwen2",
+    "claimed_params_estimate": "0.5B",
+    "params_match": true
+  }
+}

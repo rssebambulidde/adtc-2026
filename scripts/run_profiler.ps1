@@ -9,6 +9,11 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
 
+# The profiler prints U+2192/U+2713; the default Windows console codepage cannot
+# encode them and rich raises UnicodeEncodeError mid-run.
+$env:PYTHONIOENCODING = "utf-8"
+$env:PYTHONUTF8 = "1"
+
 $llamaDir = Join-Path $root "tools\llama"
 if (-not (Test-Path (Join-Path $llamaDir "llama-bench.exe"))) {
     throw "llama-bench.exe not found in $llamaDir. Download the llama.cpp Windows CPU build first."

@@ -2,7 +2,7 @@
 
 Submission for the [Africa Deep Tech Challenge 2026](https://adtc-2026.devpost.com) Laptop LLM track, domain **agriculture**.
 
-A fine-tuned 1.5B-parameter language model (Qwen2.5-1.5B-Instruct → LoRA → GGUF Q4_K_M) that answers smallholder agronomy questions entirely offline on an 8 GB commodity laptop.
+A fine-tuned 0.5B-parameter language model (Qwen2.5-0.5B-Instruct → LoRA → GGUF Q4_K_M) that answers smallholder agronomy questions entirely offline on an 8 GB commodity laptop.
 
 ---
 
@@ -16,16 +16,25 @@ Leaderboard score:
 - **S_eff** pays `(7 − peak_RAM_GB) / 7 × 100` — every unused gigabyte counts.
 - **S_acc** (50%) is judged from your two prompts + two hidden domain prompts.
 
-A ~1.5B model at Q4_K_M is sized to clear the throughput ceiling and leave most of the 7 GB budget free, so mechanical scores stay high and effort goes into agronomic accuracy and the African use-case bonus.
+The plan started at 1.5B on the assumption it would clear 15 tok/s and saturate `S_perf`.
+**Measurement disproved that**, and the corrected numbers picked the model.
 
-| Candidate | Peak RSS (est.) | TPS (est.) | S_perf | S_eff | Mech. (50%) |
+Both candidates profiled with the real ADTC profiler on an Intel Core i5-8365U (4C/8T, 2019
+U-series — a generation below the ADTC reference, so these are conservative floors):
+
+| Candidate | Peak RSS | TPS | S_perf | S_eff | 0.3·perf + 0.2·eff |
 |---|---|---|---|---|---|
-| 0.5B Q4_K_M | ~0.6 GB | ~35 | 100 | 91 | 48.3 |
-| **1.5B Q4_K_M** | **~1.3 GB** | **~18** | **100** | **81** | **46.2** |
-| 3B Q4_K_M | ~2.3 GB | ~9 | 60 | 67 | 31.4 |
-| 7B Q4_K_M | ~4.6 GB | ~4 | 27 | 34 | 14.9 |
+| Qwen2.5-1.5B Q4_K_M | 1.67 GB | 5.87 | 39.1 | 76.1 | 26.97 |
+| **Qwen2.5-0.5B Q4_K_M** | **0.53 GB** | **14.40** | **96.0** | **92.4** | **47.28** |
 
-Estimates only — replace with measured profiler values before submitting.
+The 0.5B is worth **20.3 more points of final score**. For the 1.5B to win overall it would have
+to score 41 points higher on accuracy out of 100, which is not a realistic gap between these two
+checkpoints on a judged rubric. On the faster reference laptop the 0.5B should saturate `S_perf`
+outright while the 1.5B still would not.
+
+Memory was never the binding constraint — even the 1.5B sat at 1.67 GB against a 7 GB budget
+with no OOM risk. Throughput was, and throughput tracks parameter count. Hence a 0.5B base with
+all remaining effort spent on domain accuracy, which is the other 50%.
 
 ---
 
@@ -81,7 +90,7 @@ python scripts/build_dataset.py --out data/build/train.jsonl --augment
 ### 2. Fine-tune (GPU host)
 
 ```bash
-python scripts/train_lora.py --config configs/kilimo-1.5b.yaml
+python scripts/train_lora.py --config configs/kilimo-0.5b.yaml
 ```
 
 ### 3. Merge and quantize
@@ -90,7 +99,7 @@ python scripts/train_lora.py --config configs/kilimo-1.5b.yaml
 bash scripts/merge_and_quantize.sh
 ```
 
-Produces `model/adtc-kilimo-1.5b-q4_k_m.gguf` (must match `_runtime.model_path` in `metadata.json`).
+Produces `model/adtc-kilimo-0.5b-q4_k_m.gguf` (must match `_runtime.model_path` in `metadata.json`).
 
 ### 4. Benchmark locally
 

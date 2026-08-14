@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LoRA SFT for Kilimo (Qwen2.5-1.5B-Instruct). GPU preferred; CPU config supported."""
+"""LoRA SFT for Kilimo (Qwen2.5-0.5B-Instruct). GPU preferred; CPU config supported."""
 
 from __future__ import annotations
 
@@ -58,7 +58,7 @@ def main() -> None:
     parser.add_argument(
         "--config",
         type=Path,
-        default=Path("configs/kilimo-1.5b.yaml"),
+        default=Path("configs/kilimo-0.5b.yaml"),
     )
     args = parser.parse_args()
     cfg = load_config(args.config)

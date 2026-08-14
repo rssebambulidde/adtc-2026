@@ -6,12 +6,12 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${ROOT}"
 
-CONFIG="${CONFIG:-configs/kilimo-1.5b.yaml}"
-ADAPTER_DIR="${ADAPTER_DIR:-checkpoints/kilimo-1.5b-lora}"
-MERGED_DIR="${MERGED_DIR:-merged/kilimo-1.5b}"
-OUT_GGUF="${OUT_GGUF:-model/adtc-kilimo-1.5b-q4_k_m.gguf}"
-FP16_GGUF="${FP16_GGUF:-model/adtc-kilimo-1.5b-f16.gguf}"
-BASE_MODEL="${BASE_MODEL:-Qwen/Qwen2.5-1.5B-Instruct}"
+CONFIG="${CONFIG:-configs/kilimo-0.5b.yaml}"
+ADAPTER_DIR="${ADAPTER_DIR:-checkpoints/kilimo-0.5b-lora}"
+MERGED_DIR="${MERGED_DIR:-merged/kilimo-0.5b}"
+OUT_GGUF="${OUT_GGUF:-model/adtc-kilimo-0.5b-q4_k_m.gguf}"
+FP16_GGUF="${FP16_GGUF:-model/adtc-kilimo-0.5b-f16.gguf}"
+BASE_MODEL="${BASE_MODEL:-Qwen/Qwen2.5-0.5B-Instruct}"
 
 # Paths to llama.cpp helpers (override if installed elsewhere).
 CONVERT_HF="${CONVERT_HF:-convert_hf_to_gguf.py}"

@@ -1,7 +1,10 @@
 {
   "team_id": "rssebambulidde-kilimo",
   "domain": "agriculture",
-  "language_scope": ["en", "sw"],
+  "language_scope": [
+    "en",
+    "sw"
+  ],
   "african_alpha_claim": true,
   "budget_laptop_claim": true,
   "submitter": {
@@ -25,13 +28,13 @@
     }
   ],
   "model": {
-    "name": "ADTC-Kilimo-1.5B-Q4_K_M",
+    "name": "ADTC-Kilimo-0.5B-Q4_K_M",
     "runtime": "llama.cpp",
     "quantization": "GGUF Q4_K_M",
-    "parameters_estimate": "1.5B",
+    "parameters_estimate": "0.5B",
     "packaging": "binary_bundle"
   },
   "_runtime": {
-    "model_path": "model/adtc-kilimo-1.5b-q4_k_m.gguf"
+    "model_path": "model/adtc-kilimo-0.5b-q4_k_m.gguf"
   }
 }

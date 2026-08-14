@@ -4,8 +4,8 @@
 set -euo pipefail
 
 # Override MODEL_URL to point the script at a fork or a mirror without editing it.
-MODEL_REPO="${MODEL_REPO:-rssebambulidde/adtc-kilimo-1.5b-gguf}"
-MODEL_FILE="${MODEL_FILE:-adtc-kilimo-1.5b-q4_k_m.gguf}"
+MODEL_REPO="${MODEL_REPO:-rssebambulidde/adtc-kilimo-0.5b-gguf}"
+MODEL_FILE="${MODEL_FILE:-adtc-kilimo-0.5b-q4_k_m.gguf}"
 MODEL_URL="${MODEL_URL:-https://huggingface.co/${MODEL_REPO}/resolve/main/${MODEL_FILE}?download=true}"
 
 # Must match _runtime.model_path in metadata.json exactly.
