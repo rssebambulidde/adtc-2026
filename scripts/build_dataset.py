@@ -67,10 +67,10 @@ def augment_row(row: dict, rng: random.Random) -> list[dict]:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--seed",
+        "--seed-dir",
         type=Path,
-        default=Path("data/seed/ag_qa.jsonl"),
-        help="Input seed JSONL",
+        default=Path("data/seed"),
+        help="Directory of seed JSONL shards (all *.jsonl are merged)",
     )
     parser.add_argument(
         "--out",
@@ -86,10 +86,24 @@ def main() -> None:
     parser.add_argument("--seed-rng", type=int, default=42, help="RNG seed for augment")
     args = parser.parse_args()
 
-    if not args.seed.is_file():
-        raise SystemExit(f"Seed file not found: {args.seed}")
+    if not args.seed_dir.is_dir():
+        raise SystemExit(f"Seed directory not found: {args.seed_dir}")
 
-    rows = load_seed(args.seed)
+    shards = sorted(args.seed_dir.glob("*.jsonl"))
+    if not shards:
+        raise SystemExit(f"No *.jsonl seed shards in {args.seed_dir}")
+
+    rows: list[dict] = []
+    for shard in shards:
+        rows.extend(load_seed(shard))
+
+    seen: set[str] = set()
+    for row in rows:
+        rid = row.get("id")
+        if rid in seen:
+            raise SystemExit(f"Duplicate seed id across shards: {rid}")
+        seen.add(rid)
+
     rng = random.Random(args.seed_rng)
     examples: list[dict] = []
     for row in rows:
@@ -100,11 +114,14 @@ def main() -> None:
         else:
             examples.append(to_messages(row["question"].strip(), row["answer"].strip()))
 
+    rng.shuffle(examples)
+
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w", encoding="utf-8") as f:
         for ex in examples:
             f.write(json.dumps(ex, ensure_ascii=False) + "\n")
 
+    print(f"Merged {len(shards)} shards / {len(rows)} rows")
     print(f"Wrote {len(examples)} examples -> {args.out}")
 
 
