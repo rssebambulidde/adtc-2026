@@ -7,7 +7,7 @@ model/*
 *.pt
 *.pth
 
-# Profiler output
+# Profiler output. benchmarks/ is committed evidence and deliberately not ignored.
 submission.json
 audit.json
 verdict.json
