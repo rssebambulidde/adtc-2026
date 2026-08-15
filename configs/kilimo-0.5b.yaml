@@ -1,4 +1,6 @@
-# Kilimo LoRA SFT ??? run on a Linux GPU host (Udutech / Colab), not local Windows CPU.
+# Kilimo LoRA SFT - run on a Linux GPU host (Colab T4 or better), not local Windows CPU.
+# torch_dtype/bf16 below are downgraded automatically by scripts/train_lora.py on
+# GPUs without bfloat16 support, so this config is safe to run on a T4.
 
 model:
   base: Qwen/Qwen2.5-0.5B-Instruct

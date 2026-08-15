@@ -1,4 +1,6 @@
 # CPU fallback for machines without NVIDIA GPU. Slow but viable for the seed corpus.
+# float16 is requested for parity with the GPU config; train_lora.py forces float32
+# on CPU, since half precision is not usable for CPU training.
 model:
   base: Qwen/Qwen2.5-0.5B-Instruct
   torch_dtype: float16

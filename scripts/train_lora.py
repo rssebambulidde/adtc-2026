@@ -20,7 +20,18 @@ def load_config(path: Path) -> dict:
         return yaml.safe_load(f)
 
 
+def supports_bf16() -> bool:
+    """bf16 needs Ampere or newer. Turing cards (Colab's free T4) do not have it."""
+    return torch.cuda.is_available() and torch.cuda.is_bf16_supported()
+
+
 def resolve_dtype(name: str | None) -> torch.dtype:
+    """Pick a compute dtype, downgrading anything the current hardware cannot run.
+
+    The configs ask for bfloat16 because that is right on an A100/L4, but the most
+    commonly allocated free Colab GPU is a T4, where bf16 raises at training time.
+    Silently training in the wrong dtype is worse than a loud downgrade, so warn.
+    """
     mapping = {
         "bfloat16": torch.bfloat16,
         "bf16": torch.bfloat16,
@@ -30,11 +41,25 @@ def resolve_dtype(name: str | None) -> torch.dtype:
         "fp32": torch.float32,
     }
     if not name:
-        return torch.float32 if not torch.cuda.is_available() else torch.bfloat16
-    key = str(name).lower()
-    if key not in mapping:
-        raise SystemExit(f"Unknown torch_dtype: {name}")
-    return mapping[key]
+        requested = torch.bfloat16 if torch.cuda.is_available() else torch.float32
+    else:
+        key = str(name).lower()
+        if key not in mapping:
+            raise SystemExit(f"Unknown torch_dtype: {name}")
+        requested = mapping[key]
+
+    if not torch.cuda.is_available():
+        # Half precision on CPU is unsupported for training in practice.
+        if requested is not torch.float32:
+            print(f"No CUDA device: downgrading {requested} -> float32 for CPU training")
+        return torch.float32
+
+    if requested is torch.bfloat16 and not supports_bf16():
+        gpu = torch.cuda.get_device_name(0)
+        print(f"{gpu} does not support bfloat16: downgrading -> float16")
+        return torch.float16
+
+    return requested
 
 
 def load_chat_jsonl(path: Path) -> Dataset:
@@ -114,8 +139,10 @@ def main() -> None:
         warmup_ratio=t["warmup_ratio"],
         logging_steps=t["logging_steps"],
         save_strategy=t["save_strategy"],
-        bf16=bool(t.get("bf16", torch.cuda.is_available())),
-        fp16=bool(t.get("fp16", False)),
+        # Derived from the resolved dtype, not read straight from the config, so a
+        # bf16 config cannot ask a T4 for a mode it does not have.
+        bf16=(dtype is torch.bfloat16),
+        fp16=(dtype is torch.float16),
         gradient_checkpointing=t.get("gradient_checkpointing", True),
         report_to=t.get("report_to", "none"),
         seed=t.get("seed", 42),
