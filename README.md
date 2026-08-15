@@ -46,9 +46,11 @@ download_model.sh      Required. Idempotent GGUF fetch into model/.
 REPORT.md              Required. Technical writeup for judges.
 LICENSE                GPL-3.0 (template inheritance).
 
-configs/               LoRA training config.
-data/seed/             Curated East African agronomy Q&A.
-scripts/               Dataset build, train, merge/quantize, score.
+configs/               LoRA training configs (GPU and CPU).
+data/seed/             Curated East African agronomy Q&A shards.
+scripts/               Dataset build, train, merge/quantize, profile, score.
+notebooks/             Colab: train → GGUF → Hugging Face, end to end.
+benchmarks/            Committed profiler reports behind the model choice.
 eval/                  Held-out prompts for local quality checks.
 model/                 Weights land here (gitignored).
 ```
@@ -61,7 +63,8 @@ Weights are never committed. The evaluator runs `download_model.sh`, then cuts n
 
 ### 0. Prerequisites
 
-Local machine: CPU-only self-checks. Training needs a Linux GPU host (Udutech credits or Colab).
+Local machine runs the profiler and self-checks. Training wants a GPU host — use the
+Colab notebook in step 2.
 
 Use Python 3.12 (profiler / `llama-cpp-python` are happier than on 3.14):
 
@@ -87,19 +90,30 @@ python scripts/build_dataset.py --out data/build/train.jsonl
 python scripts/build_dataset.py --out data/build/train.jsonl --augment
 ```
 
-### 2. Fine-tune (GPU host)
+### 2. Fine-tune, quantize, and publish (Colab — recommended)
+
+[`notebooks/colab_train_kilimo.ipynb`](notebooks/colab_train_kilimo.ipynb) does the whole
+chain on a free T4: LoRA SFT → merge → GGUF f16 → Q4_K_M → smoke test → Hugging Face
+upload. It ends by printing the `MODEL_REPO` and `EXPECTED_SHA256` lines to paste into
+`download_model.sh`. Budget 20–40 minutes, most of it compiling `llama.cpp`.
+
+Set a Colab Secret named `HF_TOKEN` holding a Hugging Face **write** token first.
+
+T4 is a Turing GPU with no bfloat16; `train_lora.py` detects that and drops to fp16, so
+the bf16 config is safe to run there.
+
+### 3. Or fine-tune on your own host
 
 ```bash
-python scripts/train_lora.py --config configs/kilimo-0.5b.yaml
-```
-
-### 3. Merge and quantize
-
-```bash
+python scripts/train_lora.py --config configs/kilimo-0.5b.yaml   # GPU
+python scripts/train_lora.py --config configs/kilimo-0.5b-cpu.yaml   # CPU, slow
 bash scripts/merge_and_quantize.sh
 ```
 
 Produces `model/adtc-kilimo-0.5b-q4_k_m.gguf` (must match `_runtime.model_path` in `metadata.json`).
+
+CPU training is a fallback, not a plan: a commodity laptop takes hours where a T4 takes
+minutes, and it competes with the profiler for the same cores.
 
 ### 4. Benchmark locally
 
@@ -128,23 +142,31 @@ by design and should reconcile with the audit VM.
 
 ### 5. Publish & submit
 
-1. Upload the `.gguf` to a public Hugging Face repo.
-2. Set `MODEL_REPO` and `EXPECTED_SHA256` in `download_model.sh`.
-3. Fill every `TODO` in `metadata.json`.
-4. Push this repo public on GitHub.
-5. Submit the repo URL on [Devpost](https://adtc-2026.devpost.com).
-6. Attach the 2-minute demo video.
+1. Run the Colab notebook; it uploads the `.gguf` and prints the two lines below.
+2. Set `MODEL_REPO` and `EXPECTED_SHA256` in `download_model.sh`, then commit.
+3. Re-run the profiler against the real fine-tuned weights and update `REPORT.md`.
+4. Submit the repo URL on [Devpost](https://adtc-2026.devpost.com).
+5. Attach the 2-minute demo video.
 
 ---
 
 ## Before you submit
 
-- [ ] Every `TODO` in `metadata.json` replaced
-- [ ] `MODEL_REPO` and `EXPECTED_SHA256` set in `download_model.sh`
-- [ ] `bash download_model.sh` succeeds from a clean clone
-- [ ] `adtc-profiler run` completes with `"measured_on": "participant_laptop"`
-- [ ] `REPORT.md` benchmark numbers match the profiler run
-- [ ] Repository is public
+Done:
+
+- [x] `metadata.json` filled and validated against the profiler's JSON schema
+- [x] Both model candidates profiled; 0.5B selected on measured evidence
+- [x] `REPORT.md` benchmarks are real profiler output, not estimates
+- [x] Repository is public on GitHub
+
+Outstanding:
+
+- [ ] Confirm `team_id` matches what Devpost/ADTF issued (currently `rssebambulidde-kilimo`)
+- [ ] Run the Colab notebook to produce and upload the fine-tuned GGUF
+- [ ] Set `MODEL_REPO` and `EXPECTED_SHA256` in `download_model.sh`
+- [ ] `bash download_model.sh` succeeds from a clean clone with no credentials
+- [ ] Re-run the profiler on the fine-tuned weights; update the `REPORT.md` table
+- [ ] Hugging Face model repo is **public** (the notebook checks this)
 - [ ] 2-minute demo video recorded
 - [ ] Eligibility: team ≤ 3, venture < 12 months, < $25k raised, African residence
 
